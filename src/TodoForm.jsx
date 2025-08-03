@@ -8,7 +8,8 @@ const TodoForm = function (){
             <input type="text" id="todoTitle"/>
             <button >Add Todo</button>
             </label>
-        </form>
+            
+        </form>  
         </>
     )
 }
