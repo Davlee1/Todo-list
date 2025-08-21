@@ -1,6 +1,6 @@
-const TodoListItem = function ({name }) {
+const TodoListItem = function ({todo}) {
   return (
-      <li >{name}</li>
+      <li >{todo.title}</li>
   );
 }
 

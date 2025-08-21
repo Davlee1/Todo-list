@@ -5,13 +5,17 @@ import TodoList from "./TodoList.jsx";
 import TodoForm from "./TodoForm.jsx";
 
 function App() {
-  const [newTodo, setNewTodo] = useState("insert random text here");
+  const [todoList, setTodoList] = useState([]);
+  let addTodo = (title) => {
+    const newTodo = {title: title,id: Date.now()}
+    setTodoList([...todoList, newTodo]);
+  }
   return (
     <>
       <h1>My Todos</h1>
-      <TodoForm />
-      <p>{newTodo}</p>
-      <TodoList />
+      <TodoForm onAddTodo={addTodo}/>
+      
+      <TodoList todoList={todoList}/>
     </>
   );
 }
