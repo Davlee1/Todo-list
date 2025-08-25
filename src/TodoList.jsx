@@ -1,14 +1,24 @@
+{
+  /*extract from TodoList.jsx*/
+}
+import TodoListItem from "./TodoListItem";
 
-{/*extract from TodoList.jsx*/}
-import TodoListItem from "./TodoListItem"
+function TodoList({ todoList, onCompleteTodo }) {
+  const completeTodo = onCompleteTodo;
 
-function TodoList({todoList}){
+  const filteredTodoList = todoList.filter((x) => {
+    return x.isCompleted === false;
+  });
 
-    return(
-        <ul>
-            {todoList.map(todo => <TodoListItem key={todo.id} todo={todo} />)}
-        </ul>
-    )
+  return filteredTodoList.length === 0 ? (
+    <p>Add todo above to get started</p>
+  ) : (
+    <u>
+      {filteredTodoList.map((todo) => (
+        <TodoListItem key={todo.id} todo={todo} onCompleteTodo={completeTodo} />
+      ))}{" "}
+    </u>
+  );
 }
 
-export default TodoList
+export default TodoList;

@@ -1,7 +1,18 @@
-const TodoListItem = function ({todo}) {
+const TodoListItem = function ({ todo, onCompleteTodo }) {
   return (
-      <li >{todo.title}</li>
+    <li>
+      <form>
+        <input
+          type="checkbox"
+          checked={todo.isCompleted}
+          onChange={() => {
+            return onCompleteTodo(todo.id);
+          }}
+        ></input>
+        {todo.title}
+      </form>
+    </li>
   );
-}
+};
 
 export default TodoListItem;
