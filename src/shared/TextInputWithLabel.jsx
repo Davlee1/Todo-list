@@ -1,8 +1,24 @@
-const TextInputWithLabel = function({}){
-return(
+{/*extract from TextInputWithLabel.jsx*/}
+function TextInputWithLabel({
+  elementId,
+  label,
+  onChange,
+  ref,
+  value,
+}) {
+  return (
     <>
-    <label></label>
+    
+      <label htmlFor={elementId}>{label}</label>
+      <input
+        type="text"
+        id={elementId}
+        ref={ref}
+        value={value}
+        onChange={onChange}
+      />
     </>
-)
+  );
 }
+
 export default TextInputWithLabel;
