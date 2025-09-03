@@ -3,7 +3,7 @@
 }
 import TodoListItem from "./TodoListItem.jsx";
 
-function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
+function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
   const completeTodo = onCompleteTodo;
 
   const filteredTodoList = todoList.filter((x) => {
@@ -11,7 +11,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
   });
 
   return filteredTodoList.length === 0 ? (
-    <p>Add todo above to get started</p>
+    <p>Todo list loading...</p>
   ) : (
     <u>
       {filteredTodoList.map((todo) => (

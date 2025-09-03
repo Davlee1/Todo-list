@@ -5,7 +5,7 @@ import TodoList from "./features/TodoList/TodoList.jsx";
 import TodoForm from "./features/TodoForm.jsx";
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodolist] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -14,6 +14,31 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
+      let options = { method: "Get", headers: { Authorization: token } };
+      try {
+        const resp = await fetch(url, options);
+        if (resp.ok === false) {
+          throw new Error(resp.message);
+        }
+
+        const { records } = await response.json();
+        setTodolist(
+          records.map((record) => {
+            const todo = {
+              id: record.id,
+              ...record.fields,
+            };
+            if (!todo.isCompleted) {
+              todo.isCompleted = false;
+            }
+            return todo;
+          })
+        );
+      } catch {
+        setErrorMessage(error.message);
+      } finally {
+        isLoading(false);
+      }
     };
     fetchTodos();
   }, []);
@@ -50,6 +75,7 @@ function App() {
       <br />
       <TodoList
         todoList={todoList}
+        isLoading={isLoading}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
       />
