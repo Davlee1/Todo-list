@@ -10,12 +10,21 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
     return x.isCompleted === false;
   });
 
-  return isLoading === true ? (
-    <p>Todo list loading...</p>
+  return filteredTodoList.length === 0 ? (
+    isLoading ? (
+      <p>Todo list loading...</p>
+    ) : (
+      <p>Add a Todo to get started</p>
+    )
   ) : (
     <u>
       {filteredTodoList.map((todo) => (
-        <TodoListItem key={todo.id} todo={todo} onCompleteTodo={completeTodo} onUpdateTodo={onUpdateTodo}/>
+        <TodoListItem
+          key={todo.id}
+          todo={todo}
+          onCompleteTodo={completeTodo}
+          onUpdateTodo={onUpdateTodo}
+        />
       ))}{" "}
     </u>
   );

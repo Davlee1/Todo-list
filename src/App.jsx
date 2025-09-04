@@ -6,8 +6,9 @@ import TodoList from "./features/TodoList/TodoList.jsx";
 import TodoForm from "./features/TodoForm.jsx";
 
 function App() {
-  const [todoList, setTodolist] = useState([]);
+  const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -15,10 +16,10 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
-      let options = { method: "GET", headers: { Authorization: token } };
+      const options = { method: "GET", headers: { Authorization: token } };
       try {
         const resp = await fetch(url, options);
-        if (resp.ok === false) {
+        if (!resp.ok) {
           throw new Error(resp.message);
         }
 
@@ -59,16 +60,51 @@ function App() {
     setTodoList(updatedTodos);
   };
 
-  const updateTodo = (editedTodo) => {
-    const updatedTodos = todoList.map((x) => {
+  const updateTodo = async (editedTodo) => {
+    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    const payload = {
+      records: [
+        {
+          id: editedTodo.id,
+          fields: {
+            title: editedTodo.title,
+            isCompleted: editedTodo.isCompleted,
+          },
+        },
+      ],
+    };
+
+    const options = {
+      method: "PATCH",
+      headers: { Authorization: token, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        throw new Error(resp.message);
+      }
+    } catch {
+      console.log(ErrorEvent.message);
+      setErrorMessage(`${error.message}. Reverting todo...`);
+      const revertedTodos = originalTodo;
+      setTodoList([...revertedTodos]);
+    } finally {
+      setIsSaving(false);
+    }
+
+    //old version of update todos
+    /*const updatedTodos = todoList.map((x) => {
       if (x.id === editedTodo.id) {
         return { ...editedTodo };
       }
       return x;
     });
-    setTodoList(updatedTodos);
+    setTodoList(updatedTodos);*/
   };
 
+  // unused/broken version to implement error message display
   /*
   function ShowErrorMessage() {
     if (errorMessage !== "") {
@@ -86,7 +122,7 @@ function App() {
   return (
     <>
       <h1>My Todos</h1>
-      <TodoForm onAddTodo={addTodo} />
+      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
       <br />
       <TodoList
         todoList={todoList}
