@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import "./features/TodoList/TodoList.jsx";
 import TodoList from "./features/TodoList/TodoList.jsx";
@@ -14,7 +15,7 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
-      let options = { method: "Get", headers: { Authorization: token } };
+      let options = { method: "GET", headers: { Authorization: token } };
       try {
         const resp = await fetch(url, options);
         if (resp.ok === false) {
@@ -35,9 +36,9 @@ function App() {
           })
         );
       } catch {
-        setErrorMessage(error.message);
+        setErrorMessage(Error.message);
       } finally {
-        isLoading(false);
+        setIsLoading(false);
       }
     };
     fetchTodos();
@@ -68,6 +69,20 @@ function App() {
     setTodoList(updatedTodos);
   };
 
+  /*
+  function ShowErrorMessage() {
+    if (errorMessage !== "") {
+      <div>
+        <hr />
+        <p>errorMessage</p>
+        <form>
+          <button onClick={setErrorMessage("")}>dismiss</button>
+        </form>
+      </div>
+    }
+  };
+  */
+
   return (
     <>
       <h1>My Todos</h1>
@@ -79,6 +94,15 @@ function App() {
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
       />
+      {errorMessage !== "" && (
+        <div>
+          <hr />
+          <p>errorMessage</p>
+          <form>
+            <button onClick={setErrorMessage("")}>dismiss</button>
+          </form>
+        </div>
+      )}
     </>
   );
 }

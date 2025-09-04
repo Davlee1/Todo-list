@@ -10,7 +10,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
     return x.isCompleted === false;
   });
 
-  return filteredTodoList.length === 0 ? (
+  return isLoading === true ? (
     <p>Todo list loading...</p>
   ) : (
     <u>
