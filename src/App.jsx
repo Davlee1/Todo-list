@@ -19,12 +19,14 @@ function App() {
       const options = { method: "GET", headers: { Authorization: token } };
       try {
         const resp = await fetch(url, options);
+
         if (!resp.ok) {
           throw new Error(resp.message);
         }
 
-        const { records } = await response.json();
-        setTodolist(
+        const { records } = await resp.json();
+
+        setTodoList(
           records.map((record) => {
             const todo = {
               id: record.id,
@@ -45,19 +47,61 @@ function App() {
     fetchTodos();
   }, []);
 
-  const addTodo = (title) => {
-    const newTodo = { title: title, id: Date.now(), isCompleted: false };
-    setTodoList([...todoList, newTodo]);
-  };
-
-  const completeTodo = async (x) => {
-    const originalTodo = todoList.find((todo) => todo.id === x.id);
+  //==================Add Todo==========================================================
+  const addTodo = async (newTodo) => {
     const payload = {
       records: [
         {
-          id: x.id,
           fields: {
-            title: x.title,
+            title: newTodo,
+            isCompleted: false,
+          },
+        },
+      ],
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    };
+    try {
+      setIsSaving(true);
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        throw new Error(resp.message);
+      }
+      const { records } = await resp.json();
+      console.log(records);
+      const savedTodo = {
+        id: records[0].id,
+        ...records[0].fields,
+      };
+      console.log(records[0].fields);
+
+      if (!records[0].fields.isCompleted) {
+        savedTodo.isCompleted = false;
+      }
+      setTodoList([...todoList, savedTodo]);
+    } catch {
+      console.log(ErrorEvent.message);
+      setErrorMessage(Error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  //===================completeTodo=====================================================
+  const completeTodo = async (x) => {
+    const originalTodo = todoList.find((todo) => todo.id === x);
+    const payload = {
+      records: [
+        {
+          id: originalTodo.id,
+          fields: {
+            title: originalTodo.title,
             isCompleted: true,
           },
         },
@@ -75,24 +119,26 @@ function App() {
       if (!resp.ok) {
         throw new Error(resp.message);
       }
+      
     } catch {
       console.log(ErrorEvent.message);
       setErrorMessage(`${Error.message}. Reverting todo...`);
       const revertedTodos = originalTodo;
-      setTodoList([...revertedTodos]);
+      setTodoList(revertedTodos);
     } finally {
       setIsSaving(false);
     }
 
-    /*const updatedTodos = todoList.map((x) => {
-      if (x.id === id) {
-        return { ...x, isCompleted: true };
+    const updatedTodos = todoList.map((y) => {
+      if (y.id === x) {
+        return { ...y, isCompleted: true };
       }
-      return x;
+      return y;
     });
-    setTodoList(updatedTodos);*/
+    setTodoList(updatedTodos);
   };
 
+  //=================================updateTodo================================================
   const updateTodo = async (editedTodo) => {
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
     const payload = {
@@ -127,36 +173,22 @@ function App() {
       setIsSaving(false);
     }
 
-    //old version of update todos
-    /*const updatedTodos = todoList.map((x) => {
+    const updatedTodos = todoList.map((x) => {
       if (x.id === editedTodo.id) {
         return { ...editedTodo };
       }
       return x;
     });
-    setTodoList(updatedTodos);*/
+    setTodoList(updatedTodos);
   };
 
-  // unused/broken version to implement error message display
-  /*
-  function ShowErrorMessage() {
-    if (errorMessage !== "") {
-      <div>
-        <hr />
-        <p>errorMessage</p>
-        <form>
-          <button onClick={setErrorMessage("")}>dismiss</button>
-        </form>
-      </div>
-    }
-  };
-  */
-
+  //======================return statement=======================================================
   return (
     <>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
       <br />
+      <hr />
       <TodoList
         todoList={todoList}
         isLoading={isLoading}
@@ -166,7 +198,7 @@ function App() {
       {errorMessage !== "" && (
         <div>
           <hr />
-          <p>errorMessage</p>
+          <p>{errorMessage}</p>
           <form>
             <button onClick={setErrorMessage("")}>dismiss</button>
           </form>
