@@ -4,13 +4,14 @@ import "./App.css";
 import "./features/TodoList/TodoList.jsx";
 import TodoList from "./features/TodoList/TodoList.jsx";
 import TodoForm from "./features/TodoForm.jsx";
+import TodosViewForm from "./features/TodosViewForm.jsx";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [sortField, setSortField] = useState("createdTime ");
+  const [sortField, setSortField] = useState("timeCreated");
   const [sortDirection, setSortDirection] = useState("desc");
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -25,7 +26,10 @@ function App() {
       setIsLoading(true);
       const options = { method: "GET", headers: { Authorization: token } };
       try {
-        const resp = await fetch(encodeUrl({ sortField, sortDirection }), options);
+        const resp = await fetch(
+          encodeUrl({ sortField, sortDirection }),
+          options
+        );
 
         if (!resp.ok) {
           throw new Error(resp.message);
@@ -52,7 +56,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [sortDirection, sortField]);
 
   //==================Add Todo==========================================================
   const addTodo = async (newTodo) => {
@@ -76,7 +80,10 @@ function App() {
     };
     try {
       setIsSaving(true);
-      const resp = await fetch(encodeUrl({ sortField, sortDirection }), options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error(resp.message);
       }
@@ -122,7 +129,10 @@ function App() {
     };
 
     try {
-      const resp = await fetch(encodeUrl({ sortField, sortDirection }), options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error(resp.message);
       }
@@ -166,7 +176,10 @@ function App() {
     };
 
     try {
-      const resp = await fetch(encodeUrl({ sortField, sortDirection }), options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error(resp.message);
       }
@@ -210,6 +223,13 @@ function App() {
           </form>
         </div>
       )}
+      <hr />
+      <TodosViewForm
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+        sortField={sortField}
+        setSortField={setSortField}
+      />
     </>
   );
 }

@@ -1,16 +1,35 @@
-const TodosViewForm = function ({}) {
+const TodosViewForm = function ({
+  sortDirection,
+  setSortDirection,
+  sortField,
+  setSortField,
+}) {
+  const preventRefresh = (event) => {
+    event.preventDefault();
+  }
   return (
     <>
-      <form>
+      <form onSubmit={preventRefresh}>
         <div>
-          <label>Sort by:</label>
-          <select>
+          <label>Sort by: </label>
+          <select
+            onChange={(event) => {
+            console.log(event.target.value);
+              setSortField(event.target.value);
+            }}
+            value={sortField}
+          >
             <option value="title">Title</option>
-            <option value="createdTime">Time added</option>
+            <option value="timeCreated">Time added</option>
           </select>
 
-          <label>Direction:</label>
-          <select>
+          <label> Direction: </label>
+          <select
+            onChange={(event) => {
+              setSortDirection(event.target.value);
+            }}
+            value={sortDirection}
+          >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>
