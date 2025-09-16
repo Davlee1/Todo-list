@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCallback } from "react";
 import "./App.css";
 import "./features/TodoList/TodoList.jsx";
 import TodoList from "./features/TodoList/TodoList.jsx";
@@ -17,25 +18,22 @@ function App() {
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  const encodeUrl = ({ sortField, sortDirection, queryString }) => {
+  const encodeUrl = useCallback(() => {
     let searchQuery = queryString;
     if (searchQuery) {
       searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
     }
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}${searchQuery}`;
-    
+
     return encodeURI(`${url}?${sortQuery}`);
-  };
+  }, [sortField, sortDirection, queryString]);
 
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
       const options = { method: "GET", headers: { Authorization: token } };
       try {
-        const resp = await fetch(
-          encodeUrl({ sortField, sortDirection, queryString }),
-          options
-        );
+        const resp = await fetch(encodeUrl(), options);
 
         if (!resp.ok) {
           throw new Error(resp.message);
@@ -86,20 +84,16 @@ function App() {
     };
     try {
       setIsSaving(true);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
       }
       const { records } = await resp.json();
-      console.log(records);
+
       const savedTodo = {
         id: records[0].id,
         ...records[0].fields,
       };
-      console.log(records[0].fields);
 
       if (!records[0].fields.isCompleted) {
         savedTodo.isCompleted = false;
@@ -135,10 +129,7 @@ function App() {
     };
 
     try {
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
       }
@@ -182,10 +173,7 @@ function App() {
     };
 
     try {
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
       }
@@ -212,7 +200,7 @@ function App() {
     <>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
-      <br />
+
       <hr />
       <TodoList
         todoList={todoList}
@@ -235,7 +223,7 @@ function App() {
         setSortDirection={setSortDirection}
         sortField={sortField}
         setSortField={setSortField}
-        queryString={queryString }
+        queryString={queryString}
         setQueryString={setQueryString}
       />
     </>
