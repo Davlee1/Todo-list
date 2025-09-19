@@ -1,11 +1,14 @@
-{
-  /*extract from TextInputWithLabel.jsx*/
-}
+import styled from 'styled-components'
+
+const Input = styled.input`
+margin: 0.5rem;
+`;
+
 function TextInputWithLabel({ elementId, label, onChange, ref, value }) {
   return (
     <>
       <label htmlFor={elementId}>{label}</label>
-      <input
+      <Input
         type="text"
         id={elementId}
         ref={ref}

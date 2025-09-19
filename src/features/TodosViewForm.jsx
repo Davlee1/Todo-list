@@ -1,5 +1,18 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import styled from 'styled-components'
+
+const Form = styled.form`
+padding: 0.5rem;
+`;
+
+const FormLine = styled.div`
+padding: 0.5rem;
+`;
+
+const Input = styled.input`
+margin: 0.5rem;
+`;
 
 const TodosViewForm = function ({
   sortDirection,
@@ -26,10 +39,10 @@ const TodosViewForm = function ({
   };
   return (
     <>
-      <form onSubmit={preventRefresh}>
-        <div>
+      <Form onSubmit={preventRefresh}>
+        <FormLine>
           <label>Search todos: </label>
-          <input
+          <Input
             type="text"
             value={localQueryString}
             onChange={(e) => {
@@ -44,8 +57,8 @@ const TodosViewForm = function ({
           >
             Clear
           </button>
-        </div>
-        <div>
+        </FormLine>
+        <FormLine>
           <label>Sort by: </label>
           <select
             onChange={(event) => {
@@ -67,8 +80,8 @@ const TodosViewForm = function ({
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>
-        </div>
-      </form>
+        </FormLine>
+      </Form>
     </>
   );
 };
