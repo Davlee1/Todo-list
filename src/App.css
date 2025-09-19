@@ -8,8 +8,10 @@ html {
 button, select {
   border-radius: 5px;
   background-color: #ee6c4d;
+  border-style: none;
   border-color: #b25139;
   color: #ffffff;
+  padding: .4em;
 }
 
 button:hover, select:hover {
