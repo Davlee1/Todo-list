@@ -1,1 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap");
+html {
+  font-family: "Noto Sans", sans-serif;
+  text-align: center;
+  background-color: #e2fafb;
+}
 
+button, select {
+  border-radius: 5px;
+  background-color: #ee6c4d;
+  border-style: none;
+  border-color: #b25139;
+  color: #ffffff;
+  padding: .4em;
+}
+
+button:hover, select:hover {
+  background-color: #ff4f23;
+  border-color: #c53c1a;
+}
+
+button:disabled {
+  background-color: #caa8a0;
+  border-color: #b98579;
+}

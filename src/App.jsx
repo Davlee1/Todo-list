@@ -6,6 +6,7 @@ import "./features/TodoList/TodoList.jsx";
 import TodoList from "./features/TodoList/TodoList.jsx";
 import TodoForm from "./features/TodoForm.jsx";
 import TodosViewForm from "./features/TodosViewForm.jsx";
+import styles from "./App.module.css";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -197,11 +198,11 @@ function App() {
 
   //======================return statement=======================================================
   return (
-    <>
+    <div className={styles.App}>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
 
-      <hr />
+      
       <TodoList
         todoList={todoList}
         isLoading={isLoading}
@@ -209,7 +210,7 @@ function App() {
         onUpdateTodo={updateTodo}
       />
       {errorMessage !== "" && (
-        <div>
+        <div id="error">
           <hr />
           <p>{errorMessage}</p>
           <form>
@@ -217,7 +218,7 @@ function App() {
           </form>
         </div>
       )}
-      <hr />
+      
       <TodosViewForm
         sortDirection={sortDirection}
         setSortDirection={setSortDirection}
@@ -226,7 +227,7 @@ function App() {
         queryString={queryString}
         setQueryString={setQueryString}
       />
-    </>
+    </div>
   );
 }
 
