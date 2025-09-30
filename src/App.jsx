@@ -95,13 +95,12 @@ function App() {
 
   //===================completeTodo=====================================================
   const completeTodo = async (x) => {
-    const originalTodo = todoList.find((todo) => todo.id === x);
     const payload = {
       records: [
         {
-          id: originalTodo.id,
+          id: x.id,
           fields: {
-            title: originalTodo.title,
+            title: x.title,
             isCompleted: true,
           },
         },
@@ -120,18 +119,17 @@ function App() {
         throw new Error(resp.message);
       }
     } catch {
-dispatch({ type: todoActions.setLoadError, error: Error.message });
-      dispatch({ type: updateTodo.revertTodo, editedTodo: x });
+      dispatch({ type: todoActions.setLoadError, error: Error.message });
+      dispatch({ type: todoActions.revertTodo, editedTodo: x });
     } finally {
       setIsSaving(false);
     }
 
-    dispatch({ type: updateTodo.updateTodo, editedTodo: x });
+    dispatch({ type: todoActions.completeTodo, editedTodo: x });
   };
 
   //=================================updateTodo================================================
-  const updateTodo = async (editedTodo) => {
-    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+  const updateTodo = async (x) => {
     const payload = {
       records: [
         {
@@ -156,40 +154,32 @@ dispatch({ type: todoActions.setLoadError, error: Error.message });
         throw new Error(resp.message);
       }
     } catch {
-dispatch({ type: todoActions.setLoadError, error: Error.message });
-      const revertedTodos = originalTodo;
-      setTodoList([...revertedTodos]);
+      dispatch({ type: todoActions.setLoadError, error: Error.message });
+      dispatch({ type: todoActions.revertTodo, editedTodo: x });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
-
-    const updatedTodos = todoList.map((x) => {
-      if (x.id === editedTodo.id) {
-        return { ...editedTodo };
-      }
-      return x;
-    });
-    setTodoList(updatedTodos);
+    dispatch({ type: todoActions.updateTodo, editedTodo: x });
   };
 
   //======================return statement=======================================================
   return (
     <div className={styles.App}>
       <h1>My Todos</h1>
-      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+      <TodoForm onAddTodo={addTodo} isSaving={todoState.isSaving} />
 
       <TodoList
-        todoList={todoList}
-        isLoading={isLoading}
+        todoList={todoState.todoList}
+        isLoading={todoState.isLoading}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
       />
       {errorMessage !== "" && (
         <div id="error">
           <hr />
-          <p>{errorMessage}</p>
+          <p>{todoState.errorMessage}</p>
           <form>
-            <button onClick={setErrorMessage("")}>dismiss</button>
+            <button onClick={dispatch({ type: todoActions.clearError})}>dismiss</button>
           </form>
         </div>
       )}

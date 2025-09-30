@@ -107,7 +107,7 @@ export function reducer(state = initialState, action) {
 
     case actions.completeTodo:
       const completedTodos = state.todoList.map((x) => {
-        if (x.id === action.id) {
+        if (x.id === action.editedTodo.id) {
           return { ...y, isCompleted: true };
         }
         return y;
