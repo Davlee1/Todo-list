@@ -11,7 +11,7 @@ import {
   reducer as todosReducer,
   actions as todoActions,
   initialState as initialTodosState,
-} from './reducers/todos.reducer';
+} from "./reducers/todos.reducer";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -23,8 +23,7 @@ function App() {
   const [sortDirection, setSortDirection] = useState("desc");
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
-useReducer(todosReducer,  initialTodoState)
-
+  const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
 
   const encodeUrl = useCallback(() => {
     let searchQuery = queryString;
@@ -38,7 +37,7 @@ useReducer(todosReducer,  initialTodoState)
 
   useEffect(() => {
     const fetchTodos = async () => {
-      setIsLoading(true);
+      dispatch({ type: todoActions.fetchTodos });
       const options = { method: "GET", headers: { Authorization: token } };
       try {
         const resp = await fetch(encodeUrl(), options);
@@ -49,22 +48,10 @@ useReducer(todosReducer,  initialTodoState)
 
         const { records } = await resp.json();
 
-        setTodoList(
-          records.map((record) => {
-            const todo = {
-              id: record.id,
-              ...record.fields,
-            };
-            if (!todo.isCompleted) {
-              todo.isCompleted = false;
-            }
-            return todo;
-          })
-        );
+        dispatch({ type: todoActions.loadTodos, records: records });
       } catch {
-        setErrorMessage(Error.message);
+        dispatch({ type: todoActions.setLoadError, error: Error.message });
       } finally {
-        setIsLoading(false);
       }
     };
     fetchTodos();
@@ -91,27 +78,18 @@ useReducer(todosReducer,  initialTodoState)
       body: JSON.stringify(payload),
     };
     try {
-      setIsSaving(true);
+      dispatch({ type: todoActions.startRequest });
       const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
       }
       const { records } = await resp.json();
 
-      const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-      };
-
-      if (!records[0].fields.isCompleted) {
-        savedTodo.isCompleted = false;
-      }
-      setTodoList([...todoList, savedTodo]);
+      dispatch({ type: todoActions.addTodo, records: records });
     } catch {
-      console.log(ErrorEvent.message);
-      setErrorMessage(Error.message);
+      dispatch({ type: todoActions.setLoadError, error: Error.message });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
   };
 
@@ -142,21 +120,13 @@ useReducer(todosReducer,  initialTodoState)
         throw new Error(resp.message);
       }
     } catch {
-      console.log(ErrorEvent.message);
-      setErrorMessage(`${Error.message}. Reverting todo...`);
-      const revertedTodos = originalTodo;
-      setTodoList(revertedTodos);
+dispatch({ type: todoActions.setLoadError, error: Error.message });
+      dispatch({ type: updateTodo.revertTodo, editedTodo: x });
     } finally {
       setIsSaving(false);
     }
 
-    const updatedTodos = todoList.map((y) => {
-      if (y.id === x) {
-        return { ...y, isCompleted: true };
-      }
-      return y;
-    });
-    setTodoList(updatedTodos);
+    dispatch({ type: updateTodo.updateTodo, editedTodo: x });
   };
 
   //=================================updateTodo================================================
@@ -186,8 +156,7 @@ useReducer(todosReducer,  initialTodoState)
         throw new Error(resp.message);
       }
     } catch {
-      console.log(ErrorEvent.message);
-      setErrorMessage(`${Error.message}. Reverting todo...`);
+dispatch({ type: todoActions.setLoadError, error: Error.message });
       const revertedTodos = originalTodo;
       setTodoList([...revertedTodos]);
     } finally {

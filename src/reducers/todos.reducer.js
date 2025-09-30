@@ -1,4 +1,4 @@
-export const initialTodoState = {
+export const initialState = {
   todoList: [],
   isLoading: false,
   isSaving: false,
@@ -24,13 +24,14 @@ export const actions = {
   clearError: "clearError",
 };
 
-function reducer(state = initialState, action) {
+export function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.fetchTodos:
       return {
         ...state,
         isLoading: true,
       };
+
     case actions.loadTodos:
       const todoArr = action.records.map((record) => {
         const todo = {
@@ -47,17 +48,20 @@ function reducer(state = initialState, action) {
         todoList: todoArr,
         isLoading: false,
       };
+
     case actions.setLoadError:
       return {
         ...state,
         errorMessage: action.error.message,
         isLoading: false,
       };
+
     case actions.startRequest:
       return {
         ...state,
         isSaving: true,
       };
+
     case actions.addTodo:
       const savedTodo = {
         id: records[0].id,
@@ -71,13 +75,21 @@ function reducer(state = initialState, action) {
         todoList: [state.todoList, savedTodo],
         isSaving: false,
       };
+
     case actions.endRequest:
       return {
         ...state,
         isLoading: false,
         isSaving: false,
       };
+
     case actions.revertTodo:
+      const originalTodo = state.todoList.find((todo) => todo.id === editedTodo.id);
+      const revertedState = { ...state, originalTodo };
+      return {
+        revertedState,
+      };
+
     case actions.updateTodo:
       const updatedTodos = state.todoList.map((x) => {
         if (x.id === action.editedTodo.id) {
@@ -92,6 +104,7 @@ function reducer(state = initialState, action) {
       return {
         updatedState,
       };
+
     case actions.completeTodo:
       const completedTodos = state.todoList.map((x) => {
         if (x.id === action.id) {
@@ -103,6 +116,7 @@ function reducer(state = initialState, action) {
         ...state,
         todoList: [state.todoList, ...completedTodos],
       };
+
     case actions.clearError:
       return {
         ...state,
