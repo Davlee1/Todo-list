@@ -2,7 +2,7 @@ export const initialState = {
   todoList: [],
   isLoading: false,
   isSaving: false,
-  errorMessage: "",
+  errorMessage: ""
 };
 
 export const actions = {
@@ -43,16 +43,17 @@ export function reducer(state = initialState, action) {
         }
         return todo;
       });
+      console.log(state.todoList);
       return {
         ...state,
-        todoList: todoArr,
+        todoList: [...todoArr],
         isLoading: false,
       };
 
     case actions.setLoadError:
       return {
         ...state,
-        errorMessage: action.error.message,
+        errorMessage: action.error,
         isLoading: false,
       };
 
@@ -64,8 +65,8 @@ export function reducer(state = initialState, action) {
 
     case actions.addTodo:
       const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
+        id: action.records[0].id,
+        ...action.records[0].fields,
       };
       if (!action.records[0].fields.isCompleted) {
         savedTodo.isCompleted = false;
@@ -107,10 +108,10 @@ export function reducer(state = initialState, action) {
 
     case actions.completeTodo:
       const completedTodos = state.todoList.map((x) => {
-        if (x.id === action.editedTodo.id) {
-          return { ...y, isCompleted: true };
+        if (x.id === action.editedTodo) {
+          return { ...x, isCompleted: true };
         }
-        return y;
+        return x;
       });
       return {
         ...state,

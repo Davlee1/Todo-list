@@ -45,13 +45,13 @@ function App() {
         if (!resp.ok) {
           throw new Error(resp.message);
         }
-
         const { records } = await resp.json();
 
         dispatch({ type: todoActions.loadTodos, records: records });
       } catch {
         dispatch({ type: todoActions.setLoadError, error: Error.message });
       } finally {
+        dispatch({ type: todoActions.endRequest });
       }
     };
     fetchTodos();
@@ -78,7 +78,7 @@ function App() {
       body: JSON.stringify(payload),
     };
     try {
-      dispatch({ type: todoActions.startRequest });
+      dispatch({ type: todoActions.fetchTodos });
       const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error(resp.message);
@@ -95,6 +95,7 @@ function App() {
 
   //===================completeTodo=====================================================
   const completeTodo = async (x) => {
+    console.log(x);
     const payload = {
       records: [
         {
@@ -106,6 +107,8 @@ function App() {
         },
       ],
     };
+
+    console.log(payload);
 
     const options = {
       method: "PATCH",
@@ -133,10 +136,10 @@ function App() {
     const payload = {
       records: [
         {
-          id: editedTodo.id,
+          id: x.id,
           fields: {
-            title: editedTodo.title,
-            isCompleted: editedTodo.isCompleted,
+            title: x.title,
+            isCompleted: x.isCompleted,
           },
         },
       ],
@@ -179,7 +182,9 @@ function App() {
           <hr />
           <p>{todoState.errorMessage}</p>
           <form>
-            <button onClick={dispatch({ type: todoActions.clearError})}>dismiss</button>
+            <button onClick={dispatch({ type: todoActions.clearError })}>
+              dismiss
+            </button>
           </form>
         </div>
       )}
