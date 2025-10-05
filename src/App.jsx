@@ -86,6 +86,7 @@ function App() {
       const { records } = await resp.json();
 
       dispatch({ type: todoActions.addTodo, records: records });
+      
     } catch {
       dispatch({ type: todoActions.setLoadError, error: Error.message });
     } finally {
@@ -95,7 +96,7 @@ function App() {
 
   //===================completeTodo=====================================================
   const completeTodo = async (x) => {
-    console.log(x);
+    
     const payload = {
       records: [
         {
@@ -108,7 +109,7 @@ function App() {
       ],
     };
 
-    console.log(payload);
+    
 
     const options = {
       method: "PATCH",
@@ -123,12 +124,13 @@ function App() {
       }
     } catch {
       dispatch({ type: todoActions.setLoadError, error: Error.message });
-      dispatch({ type: todoActions.revertTodo, editedTodo: x });
+      dispatch({ type: todoActions.revertTodo, editedTodo: x});
     } finally {
       setIsSaving(false);
     }
 
     dispatch({ type: todoActions.completeTodo, editedTodo: x });
+   
   };
 
   //=================================updateTodo================================================
@@ -163,6 +165,7 @@ function App() {
       dispatch({ type: todoActions.endRequest });
     }
     dispatch({ type: todoActions.updateTodo, editedTodo: x });
+    
   };
 
   //======================return statement=======================================================

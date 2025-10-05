@@ -2,7 +2,7 @@ export const initialState = {
   todoList: [],
   isLoading: false,
   isSaving: false,
-  errorMessage: ""
+  errorMessage: "",
 };
 
 export const actions = {
@@ -43,7 +43,6 @@ export function reducer(state = initialState, action) {
         }
         return todo;
       });
-      console.log(state.todoList);
       return {
         ...state,
         todoList: [...todoArr],
@@ -73,7 +72,7 @@ export function reducer(state = initialState, action) {
       }
       return {
         ...state,
-        todoList: [state.todoList, savedTodo],
+        todoList: [...state.todoList, savedTodo],
         isSaving: false,
       };
 
@@ -85,7 +84,9 @@ export function reducer(state = initialState, action) {
       };
 
     case actions.revertTodo:
-      const originalTodo = state.todoList.find((todo) => todo.id === editedTodo.id);
+      const originalTodo = state.todoList.find(
+        (todo) => todo.id === editedTodo.id
+      );
       const revertedState = { ...state, originalTodo };
       return {
         revertedState,
@@ -98,24 +99,22 @@ export function reducer(state = initialState, action) {
         }
         return x;
       });
-      const updatedState = { ...state, updatedTodos };
+      const updatedState = { ...state, todoList: updatedTodos };
       if (action.error) {
         updatedState = { ...updatedState, errorMessage: action.error.message };
       }
-      return {
-        updatedState,
-      };
+      return updatedState;
 
     case actions.completeTodo:
       const completedTodos = state.todoList.map((x) => {
-        if (x.id === action.editedTodo) {
+        if (x.id === action.editedTodo.id) {
           return { ...x, isCompleted: true };
         }
         return x;
       });
       return {
         ...state,
-        todoList: [state.todoList, ...completedTodos],
+        todoList: completedTodos,
       };
 
     case actions.clearError:
