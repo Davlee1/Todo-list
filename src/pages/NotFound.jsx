@@ -1,0 +1,18 @@
+import { NavLink } from "react-router";
+import styles from "./NotFound.module.css";
+
+const NotFound = function () {
+  return (
+    <>
+      <br />
+      <p>This page is either unavailable or doesn't exist, sorry :c</p>
+      <NavLink
+          to={"/"}
+          className={styles.returnLink}
+        >
+          Go to Home
+        </NavLink>
+    </>
+  );
+};
+export default NotFound;

@@ -1,0 +1,13 @@
+.returnLink {
+  padding: 3rem;
+  color: #000000;
+  text-shadow: 0px 0px 2px #ffffff;
+  text-decoration: none;
+  font-weight: 500px;
+}
+
+.returnLink:hover {
+  color: #ffbc1f;
+  text-shadow: 0px 0px 2px #ffbc1f;
+  font-weight: 500px;
+}
