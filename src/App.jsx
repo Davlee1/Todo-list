@@ -1,19 +1,21 @@
 import { useReducer, useState } from "react";
 import { useEffect } from "react";
 import { useCallback } from "react";
-import TodosPage from "./pages/TodosPage.jsx";
-import Header from "./shared/Header.jsx";
-import About from "./pages/About.jsx";
-import NotFound from "./pages/NotFound.jsx";
 import { Routes, Route, useLocation } from "react-router";
-import "./App.css";
-import "./features/TodoList/TodoList.jsx";
-import styles from "./App.module.css";
+
 import {
   reducer as todosReducer,
   actions as todoActions,
   initialState as initialTodosState,
 } from "./reducers/todos.reducer";
+
+import TodosPage from "./pages/TodosPage.jsx";
+import Header from "./shared/Header.jsx";
+import About from "./pages/About.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import "./App.css";
+import styles from "./App.module.css";
+
 
 function App() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -21,9 +23,12 @@ function App() {
   const [sortField, setSortField] = useState("timeCreated");
   const [queryString, setQueryString] = useState("");
   const [sortDirection, setSortDirection] = useState("desc");
+  
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+  
+
 
   const encodeUrl = useCallback(() => {
     let searchQuery = queryString;
@@ -140,7 +145,7 @@ function App() {
       dispatch({ type: todoActions.setLoadError, error: Error.message });
       dispatch({ type: todoActions.revertTodo, editedTodo: x });
     } finally {
-      setIsSaving(false);
+
     }
 
     dispatch({ type: todoActions.completeTodo, editedTodo: x });

@@ -3,11 +3,10 @@
   grid-template-columns: auto;
   justify-content: center;
   list-style-type: none;
-  
   padding: 0px;
   margin: 0px;
   border-top-style: solid;
-  border-bottom-style: solid;
+  
   border-width: 2px;
   border-color: #293241;
 }
@@ -15,7 +14,7 @@
 .Prelist {
   padding: 40px;
   border-top-style: solid;
-  border-bottom-style: solid;
+  
   border-width: 2px;
   border-color: #293241;
 }

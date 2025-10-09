@@ -4,6 +4,9 @@ import styled from 'styled-components'
 
 const Form = styled.form`
 padding: 0.5rem;
+background-color: #293241;
+color: #ffffff;
+
 `;
 
 const FormLine = styled.div`
@@ -13,6 +16,7 @@ padding: 0.5rem;
 const Input = styled.input`
 margin: 0.5rem;
 `;
+
 
 const TodosViewForm = function ({
   sortDirection,
@@ -39,6 +43,7 @@ const TodosViewForm = function ({
   };
   return (
     <>
+    
       <Form onSubmit={preventRefresh}>
         <FormLine>
           <label>Search todos: </label>

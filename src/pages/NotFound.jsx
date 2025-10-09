@@ -10,7 +10,7 @@ const NotFound = function () {
           to={"/"}
           className={styles.returnLink}
         >
-          Go to Home
+          Go Home
         </NavLink>
     </>
   );

@@ -22,3 +22,11 @@
     border-radius: 10px;
     border-color: #293241;
 }
+
+@media (max-width: 650px) {
+  .App {
+
+    max-width: 90%;
+
+}
+}

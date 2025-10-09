@@ -20,6 +20,11 @@ button:hover, select:hover {
   border-color: #c53c1a;
 }
 
+button:active, select:active {
+  background-color: #ff8060;
+  border-color: #ff5a30;
+}
+
 button:disabled {
   background-color: #caa8a0;
   border-color: #b98579;
