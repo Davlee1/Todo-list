@@ -3,10 +3,11 @@ html {
   font-family: "Noto Sans", sans-serif;
   text-align: center;
   background-color: #e2fafb;
+  font-size: 1rem;
 }
 
 button, select {
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #ee6c4d;
   border-style: none;
   border-color: #b25139;
@@ -17,6 +18,11 @@ button, select {
 button:hover, select:hover {
   background-color: #ff4f23;
   border-color: #c53c1a;
+}
+
+button:active, select:active {
+  background-color: #ff8060;
+  border-color: #ff5a30;
 }
 
 button:disabled {

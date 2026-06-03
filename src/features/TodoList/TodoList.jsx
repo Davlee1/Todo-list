@@ -9,11 +9,7 @@ import styles from "./TodoList.module.css";
 function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
   const completeTodo = onCompleteTodo;
 
-  const filteredTodoList = todoList.filter((x) => {
-    return x.isCompleted === false;
-  });
-
-  return filteredTodoList.length === 0 ? (
+  return todoList.length === 0 ? (
     isLoading ? (
       <p className={styles.Prelist}>Todo list loading...</p>
     ) : (
@@ -21,7 +17,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
     )
   ) : (
     <ul className={styles.TodoList}>
-      {filteredTodoList.map((todo) => (
+      {todoList.map((todo) => (
         <TodoListItem
           key={todo.id}
           todo={todo}

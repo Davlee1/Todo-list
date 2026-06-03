@@ -4,9 +4,6 @@ import TextInputWithLabel from "../shared/TextInputWithLabel.jsx";
 import styled from "styled-components";
 
 const Form = styled.form`
-  border-color: #ee6c4d;
-  border-top-style: solid;
-  border-top-width: 8px;
   padding: 0.5rem;
 `;
 
